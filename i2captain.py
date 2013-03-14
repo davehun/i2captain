@@ -58,6 +58,7 @@ def signal_handler(signal, frame):
 
         sys.exit(0)
 # Main entry point.
+signal.signal(signal.SIGINT, signal_handler)
 if __name__ == "__main__":
 
     udpSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -79,7 +80,7 @@ if __name__ == "__main__":
     server = socket.socket ( socket.AF_INET, socket.SOCK_STREAM )
     server.bind ( ( '', TCP_PORT ) )
     server.listen ( 1 )
-    signal.signal(signal.SIGINT, signal_handler)
+
     while True:
             conn, addr = server.accept()
             print ("Connection from", addr)
