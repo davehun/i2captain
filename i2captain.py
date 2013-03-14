@@ -66,7 +66,6 @@ if __name__ == "__main__":
     udpSocket.bind(( '' , UDP_PORT))
     signal.signal(signal.SIGINT, signal_handler)
     print 'Press Ctrl+C to exit'
-    signal.pause()
 
 
     serial = SerialThread()
