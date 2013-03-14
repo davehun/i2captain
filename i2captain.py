@@ -6,6 +6,7 @@ import thread
 import threading
 import sys
 import signal
+import os
 from time import sleep
 
 TCP_PORT = 2114
@@ -53,12 +54,10 @@ class SerialThread (threading.Thread):
 
 def signal_handler(signal, frame):
         print 'exit'
-        for theSocket in self.mySockets:
-            theSocket.close()
+        print os.getpid()
+        os.kill(os.getpid(), 9)
 
-        sys.exit(0)
 # Main entry point.
-signal.signal(signal.SIGINT, signal_handler)
 if __name__ == "__main__":
 
     udpSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -80,7 +79,7 @@ if __name__ == "__main__":
     server = socket.socket ( socket.AF_INET, socket.SOCK_STREAM )
     server.bind ( ( '', TCP_PORT ) )
     server.listen ( 1 )
-
+    signal.signal(signal.SIGINT, signal_handler)
     while True:
             conn, addr = server.accept()
             print ("Connection from", addr)
