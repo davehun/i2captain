@@ -53,8 +53,8 @@ class SerialThread (threading.Thread):
 
 def signal_handler(signal, frame):
         print 'exit'
-            for theSocket in self.mySockets:
-                theSocket.close()
+        for theSocket in self.mySockets:
+            theSocket.close()
 
         sys.exit(0)
 # Main entry point.
