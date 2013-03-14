@@ -5,7 +5,7 @@ import serial
 import thread
 import threading
 import sys
-
+import signal
 from time import sleep
 
 TCP_PORT = 2114
@@ -22,13 +22,14 @@ class SerialThread (threading.Thread):
 
         self.mySockets = []
         #print "init"
-        self.ser = serial.Serial('/dev/ttyUSB0', 4800, timeout=1)
+        self.tactick = serial.Serial('/dev/ttyUSB0', 4800, timeout=1)
+        self.gps = serial.Serial('/dev/ttyACM0', 4800, timeout=1)
     def run ( self ):
         
         global mySockets
         #print(len(self.mySockets))
         while 1:
-            data = self.ser.read()
+            data = self.tactick.read()
             print  data
             for theSocket in self.mySockets:
                 try:
@@ -49,6 +50,13 @@ class SerialThread (threading.Thread):
         mySockets.remove(socket)
 
 
+
+def signal_handler(signal, frame):
+        print 'exit'
+            for theSocket in self.mySockets:
+                theSocket.close()
+
+        sys.exit(0)
 # Main entry point.
 if __name__ == "__main__":
 
@@ -56,6 +64,10 @@ if __name__ == "__main__":
     udpSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     udpSocket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     udpSocket.bind(( '' , UDP_PORT))
+    signal.signal(signal.SIGINT, signal_handler)
+    print 'Press Ctrl+C to exit'
+    signal.pause()
+
 
     serial = SerialThread()
     serial.addSocket(udpSocket)
