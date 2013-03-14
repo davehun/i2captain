@@ -64,9 +64,9 @@ if __name__ == "__main__":
     udpSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     udpSocket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     udpSocket.bind(( '' , UDP_PORT))
-    signal.signal(signal.SIGINT, signal_handler)
+    
     print 'Press Ctrl+C to exit'
-
+    
 
     serial = SerialThread()
     serial.addSocket(udpSocket)
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     server = socket.socket ( socket.AF_INET, socket.SOCK_STREAM )
     server.bind ( ( '', TCP_PORT ) )
     server.listen ( 1 )
-
+    signal.signal(signal.SIGINT, signal_handler)
     while True:
             conn, addr = server.accept()
             print ("Connection from", addr)
