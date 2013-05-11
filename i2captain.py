@@ -7,7 +7,6 @@ import threading
 import sys
 import signal
 import os
-import select
 from time import sleep
 
 TCP_PORT = 2114
@@ -30,23 +29,18 @@ class SerialThread (threading.Thread):
         
         global mySockets
         #print(len(self.mySockets))
-        inputs = [ self.tactick, self.gps ]
         while 1:
-            readable, writable, exceptional  = select.select(inputs,[],[])
-            for sp in readable:
-                data=sp.read()
-                print  data
-                if sp != self.tactick:
-                    self.tactick.write(data)
-                for theSocket in self.mySockets:
-                    try:
-                        theSocket.send(data)
-                    except socket.error, msg:
-                        theSocket.close()
-                        self.mySockets.remove(theSocket)
-                        theSocket = None
-                        break
-                    continue
+            data = self.tactick.read()
+            print  data
+            for theSocket in self.mySockets:
+                try:
+                    theSocket.send(data)
+                except socket.error, msg:
+                    theSocket.close()
+                    self.mySockets.remove(theSocket)
+                    theSocket = None
+                    break
+                continue
                 
     def addSocket(self, socket):
 
